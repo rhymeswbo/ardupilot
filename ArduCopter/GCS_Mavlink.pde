@@ -1,5 +1,6 @@
 // -*- tab-width: 4; Mode: C++; c-basic-offset: 4; indent-tabs-mode: nil -*-
 
+
 // default sensors are present and healthy: gyro, accelerometer, barometer, rate_control, attitude_stabilization, yaw_position, altitude control, x/y position control, motor_control
 #define MAVLINK_SENSOR_PRESENT_DEFAULT (MAV_SYS_STATUS_SENSOR_3D_GYRO | MAV_SYS_STATUS_SENSOR_3D_ACCEL | MAV_SYS_STATUS_SENSOR_ABSOLUTE_PRESSURE | MAV_SYS_STATUS_SENSOR_ANGULAR_RATE_CONTROL | MAV_SYS_STATUS_SENSOR_ATTITUDE_STABILIZATION | MAV_SYS_STATUS_SENSOR_YAW_POSITION | MAV_SYS_STATUS_SENSOR_Z_ALTITUDE_CONTROL | MAV_SYS_STATUS_SENSOR_XY_POSITION_CONTROL | MAV_SYS_STATUS_SENSOR_MOTOR_OUTPUTS | MAV_SYS_STATUS_AHRS)
 
@@ -1266,6 +1267,16 @@ void GCS_MAVLINK::handleMessage(mavlink_message_t* msg)
             result = mavlink_motor_test_start(chan, (uint8_t)packet.param1, (uint8_t)packet.param2, (uint16_t)packet.param3, packet.param4);
             break;
 
+        case SET_CAMERA_CHANNEL_FORWARD:
+            grQuad_p->setCameraSwitch(FORWARD_CAMERA);
+            //hal.rcout->write(7,1100);
+            break;
+        case SET_CAMERA_CHANNEL_DOWN:
+            grQuad_p->setCameraSwitch(DOWNWARD_CAMERA);
+            //hal.rcout->write(7,1700);
+            break;
+
+
 #if EPM_ENABLED == ENABLED
         case MAV_CMD_DO_GRIPPER:
             // param1 : gripper number (ignored)
@@ -1652,7 +1663,8 @@ static void gcs_check_input(void)
     }
 }
 
-static void gcs_send_text_P(gcs_severity severity, const prog_char_t *str)
+//static
+void gcs_send_text_P(gcs_severity severity, const prog_char_t *str)
 {
     for (uint8_t i=0; i<num_gcs; i++) {
         if (gcs[i].initialised) {
