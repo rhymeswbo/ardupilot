@@ -174,6 +174,9 @@ static AP_Vehicle::MultiCopter aparm;
 // Heli modules
 #include "heli.h"
 
+// GR customizations by Giovanni Rey
+#include "GR_Quad.h"
+
 ////////////////////////////////////////////////////////////////////////////////
 // cliSerial
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,7 +199,8 @@ const AP_HAL::HAL& hal = AP_HAL_BOARD_DRIVER;
 //
 // Global parameters are all contained within the 'g' class.
 //
-static Parameters g;
+// static
+Parameters g;
 
 // main loop scheduler
 static AP_Scheduler scheduler;
@@ -332,6 +336,7 @@ static bool sonar_enabled = true; // enable user switch for sonar
 #ifdef USERHOOK_VARIABLES
  #include USERHOOK_VARIABLES
 #endif
+
 
 ////////////////////////////////////////////////////////////////////////////////
 // Global variables
@@ -884,6 +889,8 @@ static const AP_Scheduler::Task scheduler_tasks[] PROGMEM = {
 };
 #endif
 
+static GR_Quad grQuad(&g.rc_8);
+GR_Quad * grQuad_p = &grQuad;
 
 void setup() 
 {
@@ -896,6 +903,8 @@ void setup()
     StorageManager::set_layout_copter();
 
     init_ardupilot();
+    grQuad_p->CamSwitchSetup();
+
 
     // initialise the main loop scheduler
     scheduler.init(&scheduler_tasks[0], sizeof(scheduler_tasks)/sizeof(scheduler_tasks[0]));
@@ -932,6 +941,8 @@ static void perf_update(void)
     perf_info_reset();
     pmTest1 = 0;
 }
+
+
 
 void loop()
 {

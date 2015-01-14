@@ -35,6 +35,28 @@ extern "C" {
 
 
 /** @brief  */
+#ifndef HAVE_ENUM_CAMERA_CHANNEL_SWITCH
+#define HAVE_ENUM_CAMERA_CHANNEL_SWITCH
+typedef enum CAMERA_CHANNEL_SWITCH
+{
+	SET_CAMERA_CHANNEL_FORWARD=0, /*  Set forward camera mode for Gio's 4Copter, rc8 and/or pixhawk8 servo  | */
+	SET_CAMERA_CHANNEL_DOWN=1, /*  Set down camera mode for Gio's 4Copter, rc8 and/or pixhawk8 servo  | */
+	CAMERA_CHANNEL_SWITCH_ENUM_END=2, /*  | */
+} CAMERA_CHANNEL_SWITCH;
+#endif
+
+/** @brief  */
+#ifndef HAVE_ENUM_SET_GPS_COORD_VIA_MAVLINK
+#define HAVE_ENUM_SET_GPS_COORD_VIA_MAVLINK
+typedef enum SET_GPS_COORD_VIA_MAVLINK
+{
+	GR_QUAD_EXTERNAL_GPS=1, /* The global position, as returned by the Global Positioning System (GPS). This is
+                    NOT the global position estimate of the sytem, but rather a RAW sensor value. See message GLOBAL_POSITION for the global position estimate. Coordinate frame is right-handed, Z-axis up (GPS frame). |type="uint64_t" name="time_usec">Timestamp (microseconds since UNIX epoch or microseconds since system boot)| type="uint8_t" name="fix_type">0-1: no fix, 2: 2D fix, 3: 3D fix. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix.| type="int32_t" name="lat">Latitude (WGS84), in degrees * 1E7| type="int32_t" name="lon">Longitude (WGS84), in degrees * 1E7| type="int32_t" name="alt">Altitude (WGS84), in meters * 1000 (positive for up)| type="uint16_t" name="eph">GPS HDOP horizontal dilution of position in cm (m*100). If unknown, set to: 65535| type="uint16_t" name="epv">GPS VDOP vertical dilution of position in cm (m*100). If unknown, set to: 65535| type="uint16_t" name="vel">GPS ground speed (m/s * 100). If unknown, set to: 65535| type="int16_t" name="vn">GPS velocity in cm/s in NORTH direction in earth-fixed NED frame| type="int16_t" name="ve">GPS velocity in cm/s in EAST direction in earth-fixed NED frame| type="int16_t" name="vd">GPS velocity in cm/s in DOWN direction in earth-fixed NED frame| type="uint16_t" name="cog">Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: 65535| type="uint8_t" name="satellites_visible">Number of satellites visible. If unknown, set to 255|  */
+	SET_GPS_COORD_VIA_MAVLINK_ENUM_END=2, /*  | */
+} SET_GPS_COORD_VIA_MAVLINK;
+#endif
+
+/** @brief  */
 #ifndef HAVE_ENUM_MAV_CMD
 #define HAVE_ENUM_MAV_CMD
 typedef enum MAV_CMD
@@ -221,6 +243,7 @@ typedef enum CAMERA_FEEDBACK_FLAGS
 #endif
 
 // MESSAGE DEFINITIONS
+#include "./mavlink_msg_gios_memo.h"
 #include "./mavlink_msg_sensor_offsets.h"
 #include "./mavlink_msg_set_mag_offsets.h"
 #include "./mavlink_msg_meminfo.h"

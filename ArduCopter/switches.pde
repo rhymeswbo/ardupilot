@@ -128,6 +128,7 @@ static void init_aux_switches()
         case AUX_SWITCH_ATTCON_ACCEL_LIM:
         case AUX_SWITCH_RELAY:
         case AUX_SWITCH_LANDING_GEAR:
+        case AUX_SWITCH_CAM_TOGGLE:
             do_aux_switch_function(g.ch7_option, ap.CH7_flag);
             break;
     }
@@ -151,6 +152,7 @@ static void init_aux_switches()
         case AUX_SWITCH_ATTCON_ACCEL_LIM:
         case AUX_SWITCH_RELAY:
         case AUX_SWITCH_LANDING_GEAR:
+        case AUX_SWITCH_CAM_TOGGLE:
             do_aux_switch_function(g.ch8_option, ap.CH8_flag);
             break;
     }
@@ -275,8 +277,12 @@ static void do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
 #if CONFIG_SONAR == ENABLED
             if (ch_flag == AUX_SWITCH_HIGH) {
                 sonar_enabled = true;
+                gcs_send_text_P(SEVERITY_HIGH, PSTR("sonar switched on"));
+
             }else{
                 sonar_enabled = false;
+                gcs_send_text_P(SEVERITY_HIGH, PSTR("sonar switched off"));
+
             }
 #endif
             break;
@@ -451,6 +457,7 @@ static void do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
         ServoRelayEvents.do_set_relay(0, ch_flag == AUX_SWITCH_HIGH);
         break;
 
+
     case AUX_SWITCH_LANDING_GEAR:
         switch (ch_flag) {
             case AUX_SWITCH_LOW:
@@ -465,6 +472,16 @@ static void do_aux_switch_function(int8_t ch_function, uint8_t ch_flag)
         }
         break;    
 
+    case AUX_SWITCH_CAM_TOGGLE:
+        switch(ch_flag) {
+            case AUX_SWITCH_LOW:
+                grQuad_p->setCameraSwitch(FORWARD_CAMERA);
+                break;
+            case AUX_SWITCH_HIGH:
+                grQuad_p->setCameraSwitch(DOWNWARD_CAMERA);
+                break;
+        }
+        break;
     }
 }
 
